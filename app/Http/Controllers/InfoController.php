@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\PhpInfo;
+use App\Models\UserInfo;
+use App\Models\DatabaseInfo;
+use Illuminate\Container\Attributes\Database;
+use Illuminate\Http\Request;
+
 
 class InfoController extends Controller
 {
@@ -14,22 +19,24 @@ class InfoController extends Controller
     public function php() {
         $php_info = new PhpInfo;
 
-        return view('php', ['info' => $php_info->toJson()]);
+        return view('php', ['info' => json_encode($php_info)]);
     }
 
-    public function user() {
-        get_browser();
-        echo 'User IP Address - '.$_SERVER['REMOTE_ADDR'];
+    public function user(Request $request)  {
+        $useragent = $request->userAgent();
+        $ip = $request->ip();
+
+        $user_info = new UserInfo($useragent, $ip); 
+
+        return view('user', ['info' => json_encode($user_info)]);
     }
 
     public function database() {
+        $config = DB::getConfig();
+        $example_string = DB::select('select * from users');
 
-        try {
-            DB::connection()->getPdo();
-        } catch (\Exception $e) {
-            die("Could not connect to the database.  Please check your configuration. error:" . $e );
-        }
+        $database = new DatabaseInfo($config, $example_string);
 
-        //return view('database', ['name' => $mysqli]);
+        return view('database', ['config' => json_encode($database->config), 'string' => json_encode($database->example_string)]);
     }
 }

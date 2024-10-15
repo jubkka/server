@@ -4,8 +4,6 @@
     <title>Info</title>
 </head>
 <body>
-    @if(isset($name))
-        <label>Название базы данных: {{ $name }}</label>
-        @endif
+    {{$info}}
 </body>
 </html>
