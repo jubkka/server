@@ -18,6 +18,7 @@ class RegisterResource extends JsonResource
         return [
             'name' => $this->name,
             'email' => $this->email,
+            'birthday' => $this->birthday,
             'password' => $this->password,
         ];
     }
