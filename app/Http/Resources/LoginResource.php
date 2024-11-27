@@ -25,6 +25,7 @@ class LoginResource extends JsonResource
                 'updated_at' => $this->resource['user']->updated_at,
             ],
             'token' => $this->resource['token'], // Включаем токен в ответ
+            'refresh_token' => $this->resource['refresh_token'], // Включаем токен в ответ
         ];
     }
 }
