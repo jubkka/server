@@ -22,6 +22,7 @@ class PermissionController extends Controller
     public function store(CreatePermissionRequest $request)
     {
         $permissionDTO = $request->toDTO();
+        
         $permission = Permission::create([
             'name' => $permissionDTO->name,
             'cipher' => $permissionDTO->cipher,

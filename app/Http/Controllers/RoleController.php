@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
     public function index()
     {
         $roles = Role::all(); // Получаем все роли
+
         return response()->json($roles);
     }
 
@@ -55,7 +56,7 @@ class RoleController extends Controller
     }
 
     // Жесткое удаление роли
-    public function destroy($id)
+    public function destroy($id) 
     {
         $role = Role::findOrFail($id); // Ищем роль по ID
         $role->forceDelete(); // Жестко удаляем роль

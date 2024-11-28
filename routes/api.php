@@ -10,6 +10,9 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\TokensController;
 
+
+//// ROLE POLICY
+
 //Role
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('ref/policy/role', [RoleController::class, 'index']);
@@ -45,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'removePermission']);  // Удалить разрешение
     Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getRolePermissions']);  // Получить разрешения роли
 });
+
+//// LOGING and REGISTER users
 
 //unauthorized
 Route::post('login', [LoginController::class, 'login']);

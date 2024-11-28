@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RoleResources;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserRoleController extends Controller
 {
@@ -48,9 +50,19 @@ class UserRoleController extends Controller
      */
     public function getUserRoles($userId)
     {
-        $user = User::findOrFail($userId);
-        $roles = $user->roles;
+        $user = User::with('roles.permissions')->findOrFail($userId);
 
-        return response()->json($roles);
+        Log::info($user);
+
+        // Формируем результат с ролями и разрешениями
+        $rolesWithPermissions = $user->roles->map(function ($role) {
+            return [
+                'role' => new RoleResources($role),
+                'permissions' => $role->permissions, // Все разрешения для этой роли
+            ];
+        });
+
+        // Возвращаем результат в формате JSON
+        return response()->json($rolesWithPermissions);
     }
 }

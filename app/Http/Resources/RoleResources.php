@@ -18,11 +18,14 @@ class RoleResources extends JsonResource
      * @param string $cipher
      * @param string|null $description
      */
-    public function __construct(string $name, string $cipher, ?string $description = null)
+    public function __construct($resource, $additional = null)
     {
-        $this->name = $name;
-        $this->cipher = $cipher;
-        $this->description = $description;
+        parent::__construct($resource);
+        
+        // Если у вас есть дополнительные данные, которые нужно передавать
+        $this->name = $resource->name;
+        $this->description = $resource->description;
+        $this->cipher = $resource->cipher;
     }
 
     /**
@@ -33,6 +36,7 @@ class RoleResources extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'cipher' => $this->cipher,
             'description' => $this->description,
