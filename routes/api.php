@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\PermissionController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\Auth\TokensController;
 
 //Role
 Route::middleware('auth:sanctum')->group(function () {
@@ -42,3 +45,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'removePermission']);  // Удалить разрешение
     Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getRolePermissions']);  // Получить разрешения роли
 });
+
+//unauthorized
+Route::post('login', [LoginController::class, 'login']);
+Route::post('register', [RegisterController::class, 'register']);
+
+//authorized
+Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'me']);
+Route::post('/change-password', [UserController::class, 'changePassword'])->middleware('auth:sanctum');
+
+//tokens
+Route::post('refresh', [TokensController::class, 'refresh']);
+Route::middleware('auth:sanctum')->get('/tokens', [TokensController::class, 'tokens']);
+Route::middleware('auth:sanctum')->delete('/tokens/revoke', [TokensController::class, 'revokeAllTokens']);

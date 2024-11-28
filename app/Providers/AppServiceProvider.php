@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,5 +21,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+    }
+
+    /**
+     * Определяет, как загружаются маршруты для API.
+     *
+     * @return void
+     */
+
+     public function mapApiRoutes()
+    {
+        Route::prefix('api') // Префикс для API
+            ->middleware('api') // Используем middleware 'api'
+            // ->namespace($this->namespace) // Убираем это
+            ->group(base_path('routes/api.php')); // Загружаем маршруты из routes/api.php
     }
 }
