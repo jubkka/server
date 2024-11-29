@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+
 class LoginController extends Controller
 {
     public function login(LoginRequest $request)
@@ -39,6 +40,15 @@ class LoginController extends Controller
         // Генерируем новый токен
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $userTokens = $user->tokens();
+        Log::info('User tokens:', ['tokens' => $userTokens]);
+
+        Log::info('Token generated:', ['token' => $token]);
+        Log::info('Stored token in DB:', [
+            'token_from_db' => $user->tokens()->latest()->first()->token,
+            'user_id' => $user->id
+        ]);
+
         $refreshToken = Str::random(64); // Случайный токен
         RefreshToken::create([
             'user_id' => $user->id,
@@ -46,8 +56,8 @@ class LoginController extends Controller
         ]);
 
         // Возвращаем успешный ответ с данными пользователя и токеном
-        return new LoginResource([
-            'user' => $user,
+        return response()->json([
+            'user' => new LoginResource($user),
             'token' => $token,
             'refresh_token' => $refreshToken
         ]);

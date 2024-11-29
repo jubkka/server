@@ -11,11 +11,13 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
 
 //authorized
-Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
-Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'me']);
-Route::post('/change-password', [UserController::class, 'changePassword'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [LoginController::class, 'logout']);
+    Route::get('user', [UserController::class, 'me']);
+    Route::post('change-password', [UserController::class, 'changePassword']);
 
-//tokens
-Route::post('refresh', [TokensController::class, 'refresh']);
-Route::middleware('auth:sanctum')->get('/tokens', [TokensController::class, 'tokens']);
-Route::middleware('auth:sanctum')->delete('/tokens/revoke', [TokensController::class, 'revokeAllTokens']);
+    //tokens
+    Route::post('refresh', [TokensController::class, 'refresh']);
+    Route::get('tokens', [TokensController::class, 'tokens']);
+    Route::delete('tokens/revoke', [TokensController::class, 'revokeAllTokens']);
+});

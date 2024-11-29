@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\RefreshToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class TokensController extends Controller
 {
     public function tokens(Request $request)
     {
         // Получаем текущего авторизованного пользователя
-        $user = $request->user();
+        $user = Auth::user();
 
         // Получаем токены авторизованного пользователя
         $tokens = $user->tokens->map(function ($token) {
