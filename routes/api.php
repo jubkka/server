@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('change-password', [UserController::class, 'changePassword']);
 
     //tokens
-    Route::post('refresh', [TokensController::class, 'refresh']);
     Route::get('tokens', [TokensController::class, 'tokens']);
+    Route::post('refresh', [TokensController::class, 'refresh']);
     Route::delete('tokens/revoke', [TokensController::class, 'revokeAllTokens']);
 });
