@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Route::prefix('api') // Префикс для API
             ->middleware('api') // Используем middleware 'api'
-            // ->namespace($this->namespace) // Убираем это
             ->group(base_path('routes/api.php')); // Загружаем маршруты из routes/api.php
     }
 }

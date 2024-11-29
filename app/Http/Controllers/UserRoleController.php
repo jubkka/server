@@ -32,18 +32,51 @@ class UserRoleController extends Controller
     /**
      * Удалить роль у пользователя.
      */
-    public function removeRole($userId, $roleId)
+    public function softDelete($userId, $roleId)
     {
+        // Находим пользователя и роль
         $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
 
-        if (!$user->roles->contains($roleId)) {
-            return response()->json(['message' => 'The user does not have this role'], 404);
+        // Мягко удаляем роль у пользователя
+        if ($user->roles()->where('role_id', $role->id)->exists()) {
+            $user->roles()->updateExistingPivot($role->id, ['deleted_at' => now()]);
+            return response()->json(['message' => 'Role soft deleted from user.'], 200);
         }
 
-        $user->roles()->detach($roleId);
-
-        return response()->json(['message' => 'Role removed from user successfully']);
+        return response()->json(['message' => 'Role not found on user.'], 404);
     }
+
+    public function destroy($userId, $roleId)
+    {
+        // Находим пользователя и роль
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
+
+        // Удаляем роль у пользователя
+        if ($user->roles()->where('role_id', $role->id)->exists()) {
+            $user->roles()->detach($role->id);
+            return response()->json(['message' => 'Role permanently removed from user.'], 200);
+        }
+
+        return response()->json(['message' => 'Role not found on user.'], 404);
+    }
+
+    public function restore($userId, $roleId)
+    {
+        // Находим пользователя и роль
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
+
+        // Восстанавливаем мягко удаленную роль
+        if ($user->roles()->where('role_id', $role->id)->whereNotNull('deleted_at')->exists()) {
+            $user->roles()->updateExistingPivot($role->id, ['deleted_at' => null]);
+            return response()->json(['message' => 'Role restored for user.'], 200);
+        }
+
+        return response()->json(['message' => 'Role not found or not soft deleted.'], 404);
+    }
+
 
     /**
      * Получить список ролей пользователя.

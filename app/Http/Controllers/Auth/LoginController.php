@@ -20,6 +20,8 @@ class LoginController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
+        Log::info($user);
+
         // Проверяем, соответствует ли пароль и существует ли пользователь
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
@@ -29,7 +31,7 @@ class LoginController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         RefreshToken::where('user_id', $user->id)->delete();
-        
+
         $refreshToken = Str::random(64); // Случайный токен
         RefreshToken::create([
             'user_id' => $user->id,
