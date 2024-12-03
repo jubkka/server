@@ -20,8 +20,6 @@ class LoginController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        Log::info($user);
-
         // Проверяем, соответствует ли пароль и существует ли пользователь
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);

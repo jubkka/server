@@ -9,47 +9,71 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\TokensController;
-
+use App\Http\Controllers\ChangeLogController;
+use App\Http\Controllers\ChangeLogsController;
 
 //// ROLE POLICY
+Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
 
-//Role
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('ref/policy/role', [RoleController::class, 'index']); // Список ролей
-    Route::get('ref/policy/role/{id}', [RoleController::class, 'show']); // Получить конкретную роль
-    Route::post('ref/policy/role', [RoleController::class, 'store']); // Создать новую роль
-    Route::put('ref/policy/role/{id}', [RoleController::class, 'update']); // Обновить роль
-    Route::delete('ref/policy/role/{id}/soft', [RoleController::class, 'softDelete']); // Мягко удалить роль
-    Route::post('ref/policy/role/{id}/restore', [RoleController::class, 'restore']); // Восстановить роль
+    Route::prefix('/policy')->group(function () {
+        Route::prefix('/permission')->group(function () {
+            Route::get('/', [PermissionController::class, 'index']); // Получение списка разрешений
+            Route::post('/', [PermissionController::class, 'store']); // Создать новое разрешение
+            
+            Route::prefix('/{id}')->group(function () {
+                //Route::get('/story', [ChangeLogController::class, 'index']);
+
+                Route::get('/', [PermissionController::class, 'show']); // Получить конкретное разрешение 
+                Route::put('/', [PermissionController::class, 'update']); // Обновить разрешение
+                Route::delete('/', [PermissionController::class, 'destroy']); // Жестко удалить разрешение
+                Route::delete('/soft', [PermissionController::class, 'softDelete']); // Мягко удалить разрешение
+                Route::post('/restore', [PermissionController::class, 'restore']); // Восстановить разрешение
+            });
+            
+        });
+    
+        //Role
+        Route::prefix('/role')->group(function () {
+            Route::get('/', [RoleController::class, 'index']); // Список ролей
+            Route::post('/', [RoleController::class, 'store']); // Создать новую роль
+            
+            Route::prefix('/{id}')->group(function () {
+                //Route::get('/story', [ChangeLogController::class, 'index']);
+
+                Route::get('/', [RoleController::class, 'show']); // Получить конкретную роль
+                Route::put('/', [RoleController::class, 'update']); // Обновить роль
+                Route::delete('/', [RoleController::class, 'destroy']); // Жесткое удаление
+                Route::delete('/soft', [RoleController::class, 'softDelete']); // Мягко удалить роль
+                Route::post('/restore', [RoleController::class, 'restore']); // Восстановить роль
+                Route::get('/permissions', [RolePermissionController::class, 'getRolePermissions']);  // Получить разрешения роли
+                Route::post('/permissions', [RolePermissionController::class, 'assignPermission']);  // Назначить разрешение
+                Route::delete('/permissions/{permissionId}', [RolePermissionController::class, 'removePermission']);  // Удалить разрешение
+            });
+        });
+    });
+
+    Route::prefix('/user')->group(function () {
+        Route::get('/', [UserController::class, 'getUsers']);
+        
+        // Группа маршрутов для работы с ролями пользователей
+        Route::prefix('{userId}/role')->group(function () {
+
+            Route::get('/', [UserRoleController::class, 'getUserRoles']); // Получение всех ролей пользователя
+            Route::post('/', [UserRoleController::class, 'assignRole']); // Назначить роль пользователю
+            Route::delete('{roleId}', [UserRoleController::class, 'destroy']); // Удалить роль жестко
+            Route::delete('{roleId}/soft}', [UserRoleController::class, 'softDelete']);
+            Route::post('{roleId}/restore}', [UserRoleController::class], 'restore');
+        });
+    });
+
+    
+
 });
-Route::delete('ref/policy/role/{id}', [RoleController::class, 'destroy']); // Жесткое удаление
 
-//Permission
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('ref/policy/permission', [PermissionController::class, 'index']); // Получение списка разрешений
-    Route::get('ref/policy/permission/{id}', [PermissionController::class, 'show']); // Получить конкретное разрешение 
-    Route::post('ref/policy/permission', [PermissionController::class, 'store']); // Создать новое разрешение
-    Route::put('ref/policy/permission/{id}', [PermissionController::class, 'update']); // Обновить разрешение
-    Route::delete('ref/policy/permission/{id}/soft', [PermissionController::class, 'softDelete']); // Мягко удалить разрешение
-    Route::post('ref/policy/permission/{id}/restore', [PermissionController::class, 'restore']); // Восстановить разрешение
-});
-Route::delete('ref/policy/permission/{id}', [PermissionController::class, 'destroy']); // Жестко удалить разрешение
-
-//UserRole
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('ref/user', [UserController::class, 'getUsers']); //Список пользователей
-    Route::get('ref/user/{userId}/role', [UserRoleController::class, 'getUserRoles']); //Получение всех ролей пользователя
-    Route::post('ref/user/{userId}/role', [UserRoleController::class, 'assignRole']);  // Назначить роль
-    Route::delete('ref/user/{userId}/role/{roleId}', [UserRoleController::class, 'destroy']);  // Удалить жестко роль
-    Route::delete('ref/user/{userId}/role/{roleId}/soft', [UserRoleController::class, 'softDelete']);  // Удалить мягко роль ! 
-    Route::post('ref/user/{userId}/role/{roleId}/restore', [UserRoleController::class, 'restore']);  // Восстановить роли пользователя !
-});
-
-//RolePermission
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('roles/{roleId}/permissions', [RolePermissionController::class, 'assignPermission']);  // Назначить разрешение
-    Route::delete('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'removePermission']);  // Удалить разрешение
-    Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getRolePermissions']);  // Получить разрешения роли
+    Route::get('ref/user/{id}/story', [ChangeLogController::class, 'getUserHistory']);
+    Route::get('ref/policy/role/{id}/story', [ChangeLogController::class, 'getRoleHistory']);
+    Route::get('ref/policy/permission/{id}/story', [ChangeLogController::class, 'getPermissionHistory']);
 });
 
 //// ACTIONS users
