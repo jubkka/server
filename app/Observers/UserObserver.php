@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\ChangeLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserObserver
 {
@@ -46,7 +47,23 @@ class UserObserver
         });
     }
 
-    public function deleted(User $user)
+    public function deleting(User $user)
+    {
+        dd('deleting event triggered');
+
+        DB::transaction(function () use ($user) {
+            ChangeLog::create([
+                'entity_type' => 'User',
+                'entity_id' => $user->id,
+                'before_change' => json_encode($user->getAttributes()),
+                'after_change' => null,
+                'created_by' => null, 
+                'operation_type' => 'soft_delete' // операция удаления 
+            ]);
+        });        
+    }
+
+    public function forceDeleting(User $user)
     {
         DB::transaction(function () use ($user) {
             ChangeLog::create([
@@ -55,7 +72,7 @@ class UserObserver
                 'before_change' => json_encode($user->getAttributes()),
                 'after_change' => null,
                 'created_by' => null, 
-                'operation_type' => 'delete' // операция удаления 
+                'operation_type' => 'force_delete' // операция удаления 
             ]);
         });        
     }

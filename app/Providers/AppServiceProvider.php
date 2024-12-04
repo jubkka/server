@@ -10,7 +10,8 @@ use App\Models\Permission;
 use App\Observers\PermissionObserver;
 use App\Observers\RoleObserver;
 use App\Observers\UserObserver;
-
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Регистрация Observer
         Permission::observe(PermissionObserver::class);
-        User::observe(UserObserver::class);
+        //User::observe(UserObserver::class);
         Role::observe(RoleObserver::class);
     }
 

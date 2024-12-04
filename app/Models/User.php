@@ -13,7 +13,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     /**
-     * Атрибуты, которые можно массово заполнять.
+     * Атрибуты, которые можно массово заполнять
      *
      * @var array<int, string>
      */
