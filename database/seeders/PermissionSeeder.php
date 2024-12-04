@@ -51,6 +51,12 @@ class PermissionSeeder extends Seeder
                 'cipher' => "restore-{$entity}",
                 'description' => "Permission to restore a deleted {$entity}",
             ]);
+
+            Permission::create([
+                'name' => "Get story {$entity}",
+                'cipher' => "get-story-{$entity}",
+                'description' => "Permission to get a story {$entity}",
+            ]);
         }
     }
 }

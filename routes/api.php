@@ -70,10 +70,15 @@ Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
 
 });
 
+
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('ref/user/{id}/story', [ChangeLogController::class, 'getUserHistory']);
-    Route::get('ref/policy/role/{id}/story', [ChangeLogController::class, 'getRoleHistory']);
-    Route::get('ref/policy/permission/{id}/story', [ChangeLogController::class, 'getPermissionHistory']);
+
+    Route::prefix('ref/{entityType}/{entityId}/story')->group(function () {
+        Route::get('/', [ChangeLogController::class, 'getEntityChangeLog']);
+        Route::put('/restore/{logId}', [ChangeLogController::class, 'restoreEntityState']);
+    })->where(['entityType' => 'user|role|permission', 'entityId' => '[0-9]+']);
+    
 });
 
 //// ACTIONS users
