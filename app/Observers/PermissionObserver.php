@@ -59,7 +59,7 @@ class PermissionObserver
                 'entity_type' => 'Permission',
                 'entity_id' => $permission->id,
                 'before_change' => json_encode($permission->getAttributes()),
-                'after_change' => null,
+                'after_change' => json_encode($permission->getAttributes()),
                 'created_by' => null, 
                 'operation_type' => 'soft_delete' // операция мягкого удаления 
             ]);

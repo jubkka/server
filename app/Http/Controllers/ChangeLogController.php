@@ -57,12 +57,12 @@ class ChangeLogController extends Controller
         $beforeChange = json_decode($changeLog->before_change, true);
 
         // Проверяем, что старое состояние существует и является массивом
-        if (!$beforeChange || !is_array($beforeChange)) {
-            return response()->json(['message' => 'No previous state to restore.'], 400);
+        if (!$beforeChange) {
+            $beforeChange = json_decode($changeLog->after_change, true);
         }
 
         // Находим сущность по ID и восстанавливаем её состояние
-        $entity = $model::find($entityId);
+        $entity = $model::withTrashed()->find($entityId);
 
         // Если сущность не найдена, выбрасываем исключение
         if (!$entity) {
@@ -73,7 +73,7 @@ class ChangeLogController extends Controller
         $entity->fill($beforeChange);
         $entity->save();
 
-        return response()->json(['message' => "{$entityType} restored successfully.", 'entity' => $entity]);
+        return response()->json(['message' => "{$entityType} restored successfully.", 'entity' => $beforeChange]);
     }
 
     /**
