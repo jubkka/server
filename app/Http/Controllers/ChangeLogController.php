@@ -70,10 +70,10 @@ class ChangeLogController extends Controller
         }
 
         // Восстанавливаем сущность в состояние до изменений
-        $entity->fill($beforeChange);
+        $entity->forceFill($beforeChange);
         $entity->save();
 
-        return response()->json(['message' => "{$entityType} restored successfully.", 'entity' => $beforeChange]);
+        return response()->json(['message' => "{$entityType} restored successfully.", 'entity' => $entity]);
     }
 
     /**

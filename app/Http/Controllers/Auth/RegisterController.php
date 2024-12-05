@@ -18,7 +18,7 @@ class RegisterController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'birthday' => $validated['birthday'],
-            'password' => $validated['password'],
+            'password' => bcrypt($validated['password']),
         ]);
         
         return response()->json([

@@ -58,8 +58,8 @@ class RoleController extends Controller
     // Жесткое удаление роли
     public function destroy($id) 
     {
-        $role = Role::findOrFail($id); // Ищем роль по ID
-        $role->forceDelete(); // Жестко удаляем роль
+        $role = Role::withTrashed()->find($id);
+        $role->forceDelete(); 
 
         return response()->json(['message' => 'Роль успешно удалена']);
     }
@@ -67,8 +67,8 @@ class RoleController extends Controller
     // Мягкое удаление роли
     public function softDelete($id)
     {
-        $role = Role::findOrFail($id); // Ищем роль по ID
-        $role->delete(); // Мягко удаляем роль
+        $role = Role::find($id);
+        $role->delete(); 
 
         return response()->json(['message' => 'Роль успешно удалена (мягко)']);
     }

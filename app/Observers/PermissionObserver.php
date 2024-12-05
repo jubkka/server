@@ -52,31 +52,23 @@ class PermissionObserver
          });
     }
 
-    public function deleting(Permission $permission)
-    {
+    public function deleted(Permission $permission)
+    {        
         DB::transaction(function () use ($permission) {
-            ChangeLog::create([
-                'entity_type' => 'Permission',
-                'entity_id' => $permission->id,
-                'before_change' => json_encode($permission->getAttributes()),
-                'after_change' => json_encode($permission->getAttributes()),
-                'created_by' => null, 
-                'operation_type' => 'soft_delete' // операция мягкого удаления 
-            ]);
-        });        
-    }
+            $after = $permission->getAttributes();
+            $permission->deleted_at = null;
+            $before = $permission->getAttributes();
 
-    public function forceDeleting(Permission $permission)
-    {
-        DB::transaction(function () use ($permission) {
+            $changed = array_diff_assoc($after, $before);
+        
             ChangeLog::create([
                 'entity_type' => 'Permission',
                 'entity_id' => $permission->id,
-                'before_change' => json_encode($permission->getAttributes()),
-                'after_change' => null,
+                'before_change' => json_encode(array_intersect_key($before, $changed)),
+                'after_change' => json_encode($changed),
                 'created_by' => null, 
-                'operation_type' => 'force_delete' // операция жесткого удаления 
+                'operation_type' => 'soft_delete' // операция удаления 
             ]);
-        });        
+        });   
     }
 }

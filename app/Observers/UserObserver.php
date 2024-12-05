@@ -49,34 +49,21 @@ class UserObserver
     }
 
     public function deleted(User $user)
-    {
+    {   
         DB::transaction(function () use ($user) {
-            $before = $user->getOriginal();  // Старые атрибуты модели
+            $after = $user->getAttributes();
+            $user->deleted_at = null;
+            $before = $user->getAttributes();
 
-            // Определяем измененные атрибуты
-            //$changed = array_diff_assoc($user, $before);
-
+            $changed = array_diff_assoc($after, $before);
+        
             ChangeLog::create([
                 'entity_type' => 'User',
                 'entity_id' => $user->id,
-                'before_change' => json_encode($before),
-                'after_change' => json_encode($user),
+                'before_change' => json_encode(array_intersect_key($before, $changed)),
+                'after_change' => json_encode($changed),
                 'created_by' => null, 
                 'operation_type' => 'soft_delete' // операция удаления 
-            ]);
-        });        
-    }
-
-    public function forceDeleting(User $user)
-    {
-        DB::transaction(function () use ($user) {
-            ChangeLog::create([
-                'entity_type' => 'User',
-                'entity_id' => $user->id,
-                'before_change' => json_encode($user->getAttributes()),
-                'after_change' => null,
-                'created_by' => null, 
-                'operation_type' => 'force_delete' // операция удаления 
             ]);
         });        
     }

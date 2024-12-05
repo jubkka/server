@@ -68,7 +68,7 @@ class UserController extends Controller
 
     public function destroyUser($id) 
     {
-        $user = User::find($id);
+        $user = User::withTrashed()->find($id);
 
         $user->forceDelete();
 
