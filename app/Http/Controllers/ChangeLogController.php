@@ -35,7 +35,7 @@ class ChangeLogController extends Controller
     public function restoreEntityState($entityType, $entityId, $logId)
     {
         // Определяем модель в зависимости от типа сущности
-        $model = $this->getModelByEntityType(ucfirst($entityType));
+        $model = $this->getModelByEntityType($entityType);
 
         // Если модель не найдена, возвращаем ошибку
         if (!$model) {
@@ -85,11 +85,11 @@ class ChangeLogController extends Controller
     private function getModelByEntityType($entityType)
     {
         switch ($entityType) {
-            case 'User':
+            case 'user':
                 return User::class;
-            case 'Role':
+            case 'role':
                 return Role::class;
-            case 'Permission':
+            case 'permission':
                 return Permission::class;
             default:
                 return null;

@@ -10,7 +10,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\TokensController;
 use App\Http\Controllers\ChangeLogController;
-use App\Http\Controllers\ChangeLogsController;
 
 //// ROLE POLICY
 Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
@@ -54,7 +53,9 @@ Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/user')->group(function () {
         Route::get('/', [UserController::class, 'getUsers']);
-        
+        Route::delete('/destroy/{id}', [UserController::class, 'destroyUser']);
+        Route::delete('/delete/{id}', [UserController::class, 'deleteUser']);
+
         // Группа маршрутов для работы с ролями пользователей
         Route::prefix('{userId}/role')->group(function () {
 
@@ -87,7 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [UserController::class, 'read']);
-    Route::post('update', [UserController::class, 'update']);
+    Route::post('update/{id}', [UserController::class, 'update']);
 });
 
 

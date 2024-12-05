@@ -46,7 +46,7 @@ class RoleObserver
         });
     }
 
-    public function deleted(Role $role)
+    public function deleting(Role $role)
     {
         DB::transaction(function () use ($role) {
             ChangeLog::create([
@@ -55,8 +55,23 @@ class RoleObserver
                 'before_change' => json_encode($role->getAttributes()),
                 'after_change' => null,
                 'created_by' => null, 
-                'operation_type' => 'delete' // операция удаления 
+                'operation_type' => 'soft_delete' // операция удаления 
             ]);
-        });
+        });        
     }
+
+    public function forceDeleting(Role $role)
+    {
+        DB::transaction(function () use ($role) {
+            ChangeLog::create([
+                'entity_type' => 'Role',
+                'entity_id' => $role->id,
+                'before_change' => json_encode($role->getAttributes()),
+                'after_change' => null,
+                'created_by' => null, 
+                'operation_type' => 'force_delete' // операция удаления 
+            ]);
+        });        
+    }
+
 }

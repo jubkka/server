@@ -49,8 +49,6 @@ class UserObserver
 
     public function deleting(User $user)
     {
-        dd('deleting event triggered');
-
         DB::transaction(function () use ($user) {
             ChangeLog::create([
                 'entity_type' => 'User',

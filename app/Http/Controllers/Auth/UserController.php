@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RegisterResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +66,28 @@ class UserController extends Controller
         ]);
     }
 
+    public function destroyUser($id) 
+    {
+        $user = User::find($id);
+
+        $user->forceDelete();
+
+        return response()->json([
+            "message" => "destroyed $user->name",
+        ]);
+    }
+
+    public function deleteUser($id) 
+    {
+        $user = User::find($id);
+
+        $user->delete();
+
+        return response()->json([
+            "message" => "deleted $user->name",
+        ]);
+    }
+
     public function read()
     {
         if (Gate::denies('permission-check', 'read-user')) {
@@ -89,7 +112,7 @@ class UserController extends Controller
             ], 403);
         }
 
-        $user = Auth::user();
+        $user = User::find($request->id);
 
         if ($request->has('name')) {
             $user->name = $request->input('name');

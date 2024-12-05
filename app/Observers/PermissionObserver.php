@@ -52,10 +52,7 @@ class PermissionObserver
          });
     }
 
-    /**
-     * Handle the Permission "deleted" event.
-     */
-    public function deleted(Permission $permission): void
+    public function deleting(Permission $permission)
     {
         DB::transaction(function () use ($permission) {
             ChangeLog::create([
@@ -64,8 +61,22 @@ class PermissionObserver
                 'before_change' => json_encode($permission->getAttributes()),
                 'after_change' => null,
                 'created_by' => null, 
-                'operation_type' => 'delete' // операция удаления 
+                'operation_type' => 'soft_delete' // операция мягкого удаления 
             ]);
-        });
+        });        
+    }
+
+    public function forceDeleting(Permission $permission)
+    {
+        DB::transaction(function () use ($permission) {
+            ChangeLog::create([
+                'entity_type' => 'Permission',
+                'entity_id' => $permission->id,
+                'before_change' => json_encode($permission->getAttributes()),
+                'after_change' => null,
+                'created_by' => null, 
+                'operation_type' => 'force_delete' // операция жесткого удаления 
+            ]);
+        });        
     }
 }
