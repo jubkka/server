@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\TokensController;
 use App\Http\Controllers\ChangeLogController;
+use App\Http\Controllers\Auth\TwoFactorController;
 
 //// ROLE POLICY
 Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
@@ -82,9 +83,15 @@ Route::middleware('auth:sanctum')->group(function () {
     
 });
 
-//// ACTIONS users
+//// 2FA
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/2fa/toggle', [TwoFactorController::class, 'toggleTwoFactor']);
+});
 
-//Route::get('users', [UserController::class, 'users'])->middleware('permission:get-list-user');;
+Route::post('/2fa/request', [TwoFactorController::class, 'requestCode']);
+Route::post('/2fa/verify', [TwoFactorController::class, 'verifyCode']);
+
+//// ACTIONS users
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [UserController::class, 'read']);

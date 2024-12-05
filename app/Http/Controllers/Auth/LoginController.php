@@ -9,13 +9,19 @@ use App\Models\RefreshToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Services\AuthService;
 
 
 class LoginController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -25,26 +31,14 @@ class LoginController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $user->tokens()->delete();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Проверяем выбранный метод авторизации
+        if ($user->two_factor_enabled) {
+            // Переадресация на 2FA для подтверждения
+            return response()->json(['message' => 'Two-factor authentication is enabled. Please verify your code.'], 200);
+        }
 
-        RefreshToken::where('user_id', $user->id)->delete();
-
-        $refreshToken = Str::random(64); // Случайный токен
-        RefreshToken::create([
-            'user_id' => $user->id,
-            'refresh_token' => $refreshToken,
-            'expires_at' => Carbon::now()->addDays(30)
-        ]);
-
-        $cookie = cookie('refresh_token', $refreshToken, 60 * 24 * 30, null, null, true, true, false, 'Strict');
-
-        // Возвращаем успешный ответ с данными пользователя и токеном
-        return response()->json([
-            'user' => new LoginResource($user),
-            'token' => $token,
-            'refresh_token' => $refreshToken
-        ])->cookie($cookie);
+        // Если авторизация по паролю
+        return $this->authService->createTokenResponse($user);
     }
 
     public function logout(Request $request)
