@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\User;
 use App\Models\ChangeLog;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -42,19 +43,24 @@ class UserObserver
                 'before_change' => null, 
                 'after_change' => json_encode($user->getAttributes()),
                 'created_by' => null, 
-                'operation_type' => 'create' // операция создания 
+                'operation_type' => 'create', // операция создания 
             ]);
         });
     }
 
-    public function deleting(User $user)
+    public function deleted(User $user)
     {
         DB::transaction(function () use ($user) {
+            $before = $user->getOriginal();  // Старые атрибуты модели
+
+            // Определяем измененные атрибуты
+            //$changed = array_diff_assoc($user, $before);
+
             ChangeLog::create([
                 'entity_type' => 'User',
                 'entity_id' => $user->id,
-                'before_change' => json_encode($user->getAttributes()),
-                'after_change' => null,
+                'before_change' => json_encode($before),
+                'after_change' => json_encode($user),
                 'created_by' => null, 
                 'operation_type' => 'soft_delete' // операция удаления 
             ]);

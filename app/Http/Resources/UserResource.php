@@ -21,7 +21,9 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'two_factor_enabled' => $this->two_factor_enabled,
             'roles' => RoleResources::collection($this->whenLoaded('roles')),
+            'deleted_at' => $this->delete_at
         ];
     }
 }
