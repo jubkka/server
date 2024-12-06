@@ -59,7 +59,7 @@ class GitHookController extends Controller
         $this->runCommand(['git', 'reset', '--hard'], 'Discard local changes');
 
         // Команда обновления проекта до актуальной версии
-        $this->runCommand(['git', 'pull', 'origin', 'master'], 'Pull latest changes');
+        //$this->runCommand(['git', 'pull', 'origin', 'master'], 'Pull latest changes');
     }
 
     protected function runCommand(array $command, string $logMessage)
