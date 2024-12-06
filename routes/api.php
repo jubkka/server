@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\TokensController;
 use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\Auth\TwoFactorController;
+use App\Http\Controllers\GitHookController;
 
 //// ROLE POLICY
 Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
@@ -72,7 +73,7 @@ Route::prefix('/ref')->middleware('auth:sanctum')->group(function () {
 
 });
 
-
+Route::post('/hooks/git', [GitHookController::class, 'handle']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
