@@ -1895,6 +1895,7 @@
         },
         {
             "name": "monolog/monolog",
+<<<<<<< HEAD
             "version": "3.8.1",
             "source": {
                 "type": "git",
@@ -1905,6 +1906,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/Seldaek/monolog/zipball/aef6ee73a77a66e404dd6540934a9ef1b3c855b4",
                 "reference": "aef6ee73a77a66e404dd6540934a9ef1b3c855b4",
+=======
+            "version": "3.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "32e515fdc02cdafbe4593e30a9350d486b125b67"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/32e515fdc02cdafbe4593e30a9350d486b125b67",
+                "reference": "32e515fdc02cdafbe4593e30a9350d486b125b67",
+>>>>>>> lab5
                 "shasum": ""
             },
             "require": {
@@ -1982,7 +1995,11 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/Seldaek/monolog/tree/3.8.1"
+=======
+                "source": "https://github.com/Seldaek/monolog/tree/3.8.0"
+>>>>>>> lab5
             },
             "funding": [
                 {
@@ -1994,7 +2011,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2024-12-05T17:15:07+00:00"
+=======
+            "time": "2024-11-12T13:57:08+00:00"
+>>>>>>> lab5
         },
         {
             "name": "nesbot/carbon",
@@ -6682,6 +6703,7 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
             "version": "11.5.0",
             "source": {
                 "type": "git",
@@ -6692,6 +6714,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0569902506a6c0878930b87ea79ec3b50ea563f7",
                 "reference": "0569902506a6c0878930b87ea79ec3b50ea563f7",
+=======
+            "version": "11.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "f9ba7bd3c9f3ff54ec379d7a1c2e3f13fe0bbde4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9ba7bd3c9f3ff54ec379d7a1c2e3f13fe0bbde4",
+                "reference": "f9ba7bd3c9f3ff54ec379d7a1c2e3f13fe0bbde4",
+>>>>>>> lab5
                 "shasum": ""
             },
             "require": {
@@ -6719,8 +6753,12 @@
                 "sebastian/global-state": "^7.0.2",
                 "sebastian/object-enumerator": "^6.0.1",
                 "sebastian/type": "^5.1.0",
+<<<<<<< HEAD
                 "sebastian/version": "^5.0.2",
                 "staabm/side-effects-detector": "^1.0.5"
+=======
+                "sebastian/version": "^5.0.2"
+>>>>>>> lab5
             },
             "suggest": {
                 "ext-soap": "To be able to generate mocks based on WSDL files"
@@ -6763,7 +6801,11 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.0"
+=======
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.4.4"
+>>>>>>> lab5
             },
             "funding": [
                 {
@@ -6779,7 +6821,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2024-12-06T05:57:38+00:00"
+=======
+            "time": "2024-11-27T10:44:52+00:00"
+>>>>>>> lab5
         },
         {
             "name": "sebastian/cli-parser",
@@ -7705,6 +7751,7 @@
             "time": "2024-10-09T05:16:32+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "staabm/side-effects-detector",
             "version": "1.0.5",
             "source": {
@@ -7766,6 +7813,17 @@
             },
             "dist": {
                 "type": "zip",
+=======
+            "name": "symfony/yaml",
+            "version": "v7.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "099581e99f557e9f16b43c5916c26380b54abb22"
+            },
+            "dist": {
+                "type": "zip",
+>>>>>>> lab5
                 "url": "https://api.github.com/repos/symfony/yaml/zipball/099581e99f557e9f16b43c5916c26380b54abb22",
                 "reference": "099581e99f557e9f16b43c5916c26380b54abb22",
                 "shasum": ""
