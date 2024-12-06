@@ -52,11 +52,9 @@ class GitHookController extends Controller
 
     protected function executeGitCommands()
     {
-        $this->runCommand(['git', 'checkout', 'master'], 'Switch to main branch');
-
         $this->runCommand(['git', 'reset', '--hard'], 'Discard local changes');
-
-        $this->runCommand(['git', 'pull', 'origin', 'master'], 'Pull latest changes');
+        $this->runCommand(['git', 'checkout', 'master'], 'Switch to main branch');
+        $this->runCommand(['git', 'pull'], 'Pull latest changes');
     }
 
     protected function runCommand(array $command, string $logMessage)
