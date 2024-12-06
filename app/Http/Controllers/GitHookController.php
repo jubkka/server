@@ -62,7 +62,16 @@ class GitHookController extends Controller
     protected function runCommand(array $command, string $logMessage)
     {
         $process = new Process($command);
-        $process->run();
+        
+        $process->setTimeout(3600);  // Увеличиваем таймаут, если нужно
+        $process->run(function ($type, $buffer) {
+            if ($type === Process::ERR) {
+                // Логируем ошибки с кодировкой
+                Log::error('Git error: ' . mb_convert_encoding($buffer, 'UTF-8', 'auto'));
+            } else {
+                Log::info('Git output: ' . mb_convert_encoding($buffer, 'UTF-8', 'auto'));
+            }
+        });
 
         if (!$process->isSuccessful()) {
             throw new \RuntimeException($process->getErrorOutput());
