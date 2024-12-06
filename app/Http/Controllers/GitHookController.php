@@ -52,9 +52,11 @@ class GitHookController extends Controller
 
     protected function executeGitCommands()
     {
+        $sshKeyPath = 'C:/Users/zxc/.ssh/id_rsa';
+
         $this->runCommand(['git', 'reset', '--hard'], 'Discard local changes');
         $this->runCommand(['git', 'checkout', 'master'], 'Switch to main branch');
-        $this->runCommand(['git', 'pull'], 'Pull latest changes');
+        $this->runCommand(['git', "-c core.sshCommand=ssh -i $sshKeyPath -o StrictHostKeyChecking=no",'pull'], 'Pull latest changes');
     }
 
     protected function runCommand(array $command, string $logMessage)
